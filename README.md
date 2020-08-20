@@ -2,7 +2,7 @@
 Multilingual NER and XEL demo
 ## Requirements
 1. Install cherrypy;
-2. Install allennlp 0.8.0;
+2. Install allennlp 0.8.0, 0.8.5;
 3. Install [Cogcomp](https://github.com/CogComp/cogcomp-nlp), and compile following the [instructions](https://github.com/CogComp/cogcomp-nlp/blob/master/ner/README.md);
 4. Put pretrained BERT models into ./lorelei-models/bert
 
