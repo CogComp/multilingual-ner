@@ -29,20 +29,24 @@ if __name__ == '__main__':
     # Define the list of preloaded bert models here
     preload = ["cmn", "deu", "eng", "som", "spa"] # Chinese, German, English, Somali, Spanish 
     # For cogcomp, load models in ner() 
-
+    
     print ("")
     print ("Preloading 5 BERT models ...")
     for lang in preload:
         #path = "../lorelei-models/bert/"+lang+"/exp1/model.tar.gz"
         path = "/shared/ruohaog/demo/lorelei-models/bert/"+lang+"/exp1/model.tar.gz"
-
+        
         global predictor 
         predictor =  predict_instance.Predictor(path)
         predictors[lang] = predictor
-        
+        print("finish loading "+lang)
+
+    
     print ("")
+    #macniece:4004
     print ("Starting rest service...")
     config = {'server.socket_host': '0.0.0.0'}
     cherrypy.config.update(config)
+    #cherrypy.config.update({'server.socket_port': 4004})
     cherrypy.config.update({'server.socket_port': 8099})
     cherrypy.quickstart(MyWebService())
