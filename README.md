@@ -19,4 +19,5 @@ Open another terminal, and send the curl request. The request consists of "lang"
 ```
 curl -d '{"lang" : "eng", "model" : "cogcomp", "text" : "Barack Hussein Obama, an American politician serving as the 44th President of the United States, graduated from Columbia University and Harvard Law School, where he served as president of the Harvard Law Review."}' -H "Content-Type: application/json" -X POST http://localhost:8099/ner
 ```
+NOTE: To use the only default setup for Cogcomp English, set "lang" to "eng-default".
 
