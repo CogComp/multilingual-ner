@@ -47,8 +47,8 @@ We now support NER for 33 languages:
 | Akan (Twi) | aka        | Amharic    | amh        |  Arabic    | ara    |
 | Bengali    | ben    | Mandarin     | cmn     | Farsi     | fas    |
 | Hausa      | hau    | Hindi        | hin     | Hungarian | hun |
-| Indonesian   | ind    | Russian   | rus / ru (BS)    | Somali     | som   |
-| Spanish    | spa / esp (Co2)     |  Swahili    |  swa     | Tamil   | tam  |
+| Indonesian   | ind    | Russian   | rus / ru(BS)    | Somali     | som   |
+| Spanish    | spa / esp(Co2)     |  Swahili    |  swa     | Tamil   | tam  |
 | Tagalog       | tgl    | Thai    | tha    | Turkish    |  tur    |
 | Uzbek       | uzb    | Vietnamese    | vie    | Wolof    |  wol    |
 | Yoruba       | yor    | Zulu    | zul    | Kinyarwanda    |  kin    |
@@ -61,4 +61,10 @@ We now support NER for 33 languages:
 **Datasets** we used for model training:
 
 CoNLL2002 (Co2), CoNLL2003, LORELEI, BSNLP2019 (BS).
+
+CoNLL Tags: PER, LOC, ORG, MISC
+
+LORELEI Tags: PER, LOC, ORG, GPE, TTL (only for "hau")
+
+BSNLP2019 Tags: PER, LOC, ORG, PRO, EVT
 
