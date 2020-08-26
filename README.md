@@ -23,7 +23,7 @@ sh run-poly.sh
 ```
 
 ### Step 2:
-Open another terminal, and send the curl request. The request consists of "lang" (language), "model" (BERT, Cogcomp), "text". 
+Open another terminal, and send the curl request. The request consists of "lang" (language code), "model" (BERT, Cogcomp), "text" (sentences to do NER). 
 
 ### Example requests:
 ```
@@ -35,4 +35,28 @@ curl -d '{"lang" : "rus", "model" : "bert", "text" : "В прошлом году
 ```
 
 NOTE: To use the only default setup for Cogcomp English, set "lang" to "eng-default".
+
+## Language codes
+We now support NER for 33 languages:
+<!-- mdformat off(no table) -->
+
+| Language   | Code       | Language   | Code       | Language   | Code       |
+|----------  | ---------- | ---------- | ---------- | ---------- | ---------- |
+| Akan (Twi) | aka        | Amharic    | amh        |  Arabic    | ara    |
+| Bengali    | ben    | Mandarin     | cmn     | Farsi     | fas    |
+| Hausa      | hau    | Hindi        | hin     | Hungarian | hun |
+| Indonesian   | ind    | Russian   | rus / ru (BS)    | Somali     | som   |
+| Spanish    | spa / esp (Co2)     |  Swahili    |  swa     | Tamil   | tam  |
+| Tagalog       | tgl    | Thai    | tha    | Turkish    |  tur    |
+| Uzbek       | uzb    | Vietnamese    | vie    | Wolof    |  wol    |
+| Yoruba       | yor    | Zulu    | zul    | Kinyarwanda    |  kin    |
+| Oromo | orm | Sinhala | sin | Tigrinya| tir |
+| Uyghur | uig  | Czech | cs |  Bulgarian | bg |
+|  Polish | pl | Dutch | ned | German | deu |
+
+<!-- mdformat on -->
+
+**Datasets** we used for model training:
+
+CoNLL2002 (Co2), CoNLL2003, LORELEI, BSNLP2019 (BS).
 
