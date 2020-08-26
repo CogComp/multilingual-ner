@@ -36,6 +36,8 @@ curl -d '{"lang" : "rus", "model" : "bert", "text" : "В прошлом году
 
 NOTE: To use the only default setup for Cogcomp English, set "lang" to "eng-default".
 
+
+
 ## Language codes
 We now support NER for 33 languages:
 <!-- mdformat off(no table) -->
