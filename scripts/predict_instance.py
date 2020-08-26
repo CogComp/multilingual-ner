@@ -3,6 +3,7 @@ from allennlp.data.dataset_readers.dataset_utils import span_utils
 from allennlp.models.archival import load_archive
 from allennlp.common.util import import_submodules
 from bert_tokenization import BasicTokenizer
+import ccg
 
 '''
 DHEGAYSO+Sawiro: O
@@ -36,7 +37,15 @@ class Predictor:
         self.model = archive.model
         config = archive.config.duplicate()
         dataset_reader_params = config["dataset_reader"]
-        dataset_reader_params["type"] = "conll2003"
+
+        '''        
+        if "polyglot" in model_path:
+            print("========   Use polyglot dataset_reader  ========")
+        else:
+            print("========   Use conll2003 dataset_reader  ========")
+            dataset_reader_params["type"] = "conll2003"
+        '''
+        
         del dataset_reader_params["sentence_length_threshold"] #ruohao: comment out this for cs
         self.dataset_reader = DatasetReader.from_params(dataset_reader_params)
 
