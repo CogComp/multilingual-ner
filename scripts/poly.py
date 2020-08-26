@@ -38,8 +38,7 @@ class MyWebService(object):
 predictors = {}
 if __name__ == '__main__':
     # Define the list of preloaded bert models here
-    #preload = ["lorelei-1", "conll", "balto-slavic"] 
-    preload = ["lorelei-1", "conll"] 
+    preload = ["lorelei-1", "conll", "balto-slavic"]      
     # For cogcomp, load models in ner() 
     
     print ("")
@@ -49,7 +48,7 @@ if __name__ == '__main__':
         global predictor 
         predictor =  predict_instance.Predictor(path)
         predictors[group] = predictor
-        print("finish loading " + group)
+        print("finish loading " + group + "\n")
 
     
     print ("")
