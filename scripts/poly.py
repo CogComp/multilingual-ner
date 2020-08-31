@@ -44,7 +44,8 @@ if __name__ == '__main__':
     print ("")
     print ("Preloading Polyglot BERT models ...")
     for group in preload:
-        path = "/shared/ruohaog/demo/polyglot-models/"+group+"/model.tar.gz"   
+        #path = "/shared/ruohaog/demo/polyglot-models/"+group+"/model.tar.gz"   
+        path = "../models/polyglot-bert/" + group + "/model.tar.gz" 
         global predictor 
         predictor =  predict_instance.Predictor(path)
         predictors[group] = predictor

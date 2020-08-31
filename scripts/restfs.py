@@ -33,8 +33,8 @@ if __name__ == '__main__':
     print ("")
     print ("Preloading 5 BERT models ...")
     for lang in preload:
-        #path = "../lorelei-models/bert/"+lang+"/exp1/model.tar.gz"
-        path = "/shared/ruohaog/demo/lorelei-models/bert/"+lang+"/exp1/model.tar.gz"
+        path = "../models/monolingual-bert/"+lang+"/exp1/model.tar.gz"
+        #path = "/shared/ruohaog/demo/lorelei-models/bert/"+lang+"/exp1/model.tar.gz"
         
         global predictor 
         predictor =  predict_instance.Predictor(path)
