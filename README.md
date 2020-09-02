@@ -5,6 +5,7 @@ Multilingual NER and XEL demo
 2. Install allennlp 0.8.0 (for monolingual NER models) or allennlp 0.8.5 (for polyglot NER models);
 3. Install [Cogcomp](https://github.com/CogComp/cogcomp-nlp), and compile following the [instructions](https://github.com/CogComp/cogcomp-nlp/blob/master/ner/README.md);
 4. Put pretrained BERT models into ./lorelei-models/bert
+5. Install PyTorch 1.6.0
 
 
 ## Resources
