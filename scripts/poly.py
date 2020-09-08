@@ -49,8 +49,8 @@ class MyWebService(object):
                 shutil.rmtree(new_indir)
             if os.path.exists(new_outdir):
                 shutil.rmtree(new_outdir)
-            os.mkdir(new_indir)
-            os.mkdir(new_outdir)
+            os.makedirs(new_indir)
+            os.makedirs(new_outdir)
 
             helper.getInput2CCG(text, new_indir+"/tmp_in.txt")
             os.system("sh use_annotate.sh " + lang + " " + str(count_ccg_id))
