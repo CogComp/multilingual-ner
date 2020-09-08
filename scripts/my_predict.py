@@ -16,14 +16,14 @@ class ProcessHelper:
         return text_tokens
 
 
-    def getInput2CCG(self, original_text, inpath="input/tmp_in.txt"):
+    def getInput2CCG(self, original_text, inpath="./tmp/input/tmp_in.txt"):
         # if file exists, del it
         if os.path.isfile(inpath):
-            print("delete existing tmp file\n")
+            print("\ndelete existing input tmp file\n")
             os.remove(inpath)
 
         tokens = self.base_tokenize(original_text)
-        with open("./"+inpath, "a") as inputfile:
+        with open(inpath, "a") as inputfile:
             inputfile.write("O 0 0 -X- -X- -DOCSTART- x x 0\n")
             for token in tokens:
                 line = "O 0 0 0 0 "+token+" 0 0 0\n"
@@ -31,9 +31,10 @@ class ProcessHelper:
 
         
 
-    def getOutputFromCCG(self, outpath="output/0.txt"):
+    def getOutputFromCCG(self, outpath="./tmp/output/0.txt"):
         tags = []
-        with open("./"+outpath, "r") as outputfile:
+        
+        with open(outpath, "r") as outputfile:
             inlines = outputfile.readlines()    
             for index, line in enumerate(inlines):
                 if "-DOCSTART-" in line:
@@ -43,7 +44,8 @@ class ProcessHelper:
                     tags.append(a[2])
                 
             #print(len(tags))
-            #print(tags)
+            print("\n\ntags:\n",tags)
+            print()
             spans = span_utils.bio_tags_to_spans(tags)
             #print(spans)
             return format_ner_output_to_json(self.original_text, self.text_tokens, tags, spans)
