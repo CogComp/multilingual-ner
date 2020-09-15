@@ -44,8 +44,8 @@ class ProcessHelper:
                     tags.append(a[2])
                 
             #print(len(tags))
-            print("\n\ntags:\n",tags)
-            print()
+            #print("\n\ntags:\n",tags)
+            #print()
             spans = span_utils.bio_tags_to_spans(tags)
             #print(spans)
             return format_ner_output_to_json(self.original_text, self.text_tokens, tags, spans)

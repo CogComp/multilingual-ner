@@ -17,8 +17,17 @@ class MyWebService(object):
 
         return {
             "service"  : "up",
-            "models"   : ["cogcomp", "Polyglot BERT"], #["cogcomp", "LORELEI BERT", "CoNLL BERT", "Balto-Slavic BERT"], 
-            "languages": {"cogcomp": lang_list,  "Polyglot BERT" : lang_list }
+            "models"   : ["cogcomp", "bert"], #["cogcomp", "LORELEI BERT", "CoNLL BERT", "Balto-Slavic BERT"], 
+            "languages": {"cogcomp": lang_list,  "bert" : lang_list },
+            "language codes":{
+                "Akan (Twi)": "aka", "Amharic": "amh", "Arabic": "ara", "Bengali": "ben", "Mandarin":"cmn",
+                "Farsi": "fas", "Hausa":"hau", "Hindi":"hin" , "Hungarian" : "hun", "Indonesian": "ind", "Russian": "rus / ru(BS)", 
+                "Somali":"som", "Spanish":"spa / esp(Co2)", "Swahili":"swa", "Tamil":"tam", "Tagalog":"tgl", 
+                "Thai":"tha", "Turkish":"tur", "Uzbek":"uzb", "Vietnamese":"vie", "Wolof":"wol", "Yoruba":"yor", "Zulu":"zul", 
+                "Kinyarwanda":"kin", "Oromo":"orm", "Sinhala":"sin", "Tigrinya":"tir", "Uyghur":"uig", 
+                "Czech":"cs", "Bulgarian":"bg", "Polish":"pl", "Dutch":"ned", "German":"deu"    
+                }
+
             }
 
 
@@ -26,12 +35,25 @@ class MyWebService(object):
     @cherrypy.tools.json_out()
     @cherrypy.tools.json_in()
     def ner(self, lang="eng", model="bert", text="Barack Hussein Obama graduated from Columbia University and Harvard Law School"):
+        readjson=True
         data = cherrypy.request.json
-        if data is not None:
-            # Invalid JSON request handling
-            # Assume JSON request always has keys "lang" "model" "text"
-            if data["text"] is "":
-                return {"Warning" : "Please enter text. The default model is English BERT."}
+
+        if len(data)==0:
+            readjson=False
+            parameter = cherrypy.request.params
+            print(parameter)
+            lang = parameter["lang"] if "lang" in parameter.keys() else lang
+            model = parameter["model"] if "model" in parameter.keys() else model
+            text = parameter["text"] if "text" in parameter.keys() else text
+            
+        elif "text" not in data.keys() or data["text"] is "":
+            return {"Warning" : "Please enter text. The default model is English BERT."}   
+        elif "lang" not in data.keys():
+            data["lang"] = ""
+        elif "model" not in data.keys():
+            data["model"] = ""    
+
+        if readjson:
             lang = data["lang"] if data["lang"] is not "" else "eng"
             model = data["model"]
             text = data["text"]
@@ -83,11 +105,10 @@ predictors = {}
 count_ccg_id = 0
 if __name__ == '__main__':
     # Define the list of preloaded bert models here
-    #preload = ["lorelei-1", "conll", "balto-slavic"]      
+    preload = ["lorelei-1", "conll", "balto-slavic"]      
     # For cogcomp, load models in ner() 
-    preload = ["conll"]
+    #preload = ["conll"]
     
-
     print ("")
     print ("Preloading Polyglot BERT models ...")
     for group in preload:
@@ -98,7 +119,6 @@ if __name__ == '__main__':
         predictors[group] = predictor
         print("finish loading " + group + "\n")
 
-    
 
     print ("")
     print ("Starting rest service...")
