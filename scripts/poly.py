@@ -7,6 +7,10 @@ import os, shutil
 class MyWebService(object):
 
     @cherrypy.expose
+    def index(self):
+        return {"what???"}
+
+    @cherrypy.expose
     @cherrypy.tools.json_out()
     def status(self):
         lang_list = ["Akan (Twi)", "Amharic", "Arabic", "Bengali", "Mandarin", "Farsi", 
@@ -30,34 +34,52 @@ class MyWebService(object):
 
             }
 
+    def invalid_fields(self, data):
+        target_keys = ["lang","model","text"]
+        invalid = []
+        for key in target_keys:
+            if key not in data.keys():
+                invalid.append(key)
+        return invalid
+
+    def read_request(self, data):
+        if len(data) == 0:
+            return {"Warning" : "An empty request!"}
+        else:
+            invalid = self.invalid_fields(data)
+            if len(invalid)!=0:
+                return {"Warning" : "Missing fields: " + ", ".join(invalid)}
+            else:
+                return self.predict(data["lang"], data["model"], data["text"])
+
+
+            
 
     @cherrypy.expose
     @cherrypy.tools.json_out()
     @cherrypy.tools.json_in()
-    def ner(self, lang="eng", model="bert", text="Barack Hussein Obama graduated from Columbia University and Harvard Law School"):
-        readjson=True
-        data = cherrypy.request.json
+    def ner(self, lang='', model='', text=''):
+        useJSON=True
+        try:
+            data = cherrypy.request.json
+        except:
+            useJSON=False
+            data = cherrypy.request.params
+            print("\nNot reading json!!!")
+            #print(data)
 
-        if len(data)==0:
-            readjson=False
-            parameter = cherrypy.request.params
-            print(parameter)
-            lang = parameter["lang"] if "lang" in parameter.keys() else lang
-            model = parameter["model"] if "model" in parameter.keys() else model
-            text = parameter["text"] if "text" in parameter.keys() else text
+        if useJSON:
+            para = cherrypy.request.params
+            if len(para) != 0:
+                print("\nOverwrite json with http request (HTTP is priority)")
+                data = para
+       
+        result = self.read_request(data)
+        print(result)
+        return result
             
-        elif "text" not in data.keys() or data["text"] is "":
-            return {"Warning" : "Please enter text. The default model is English BERT."}   
-        elif "lang" not in data.keys():
-            data["lang"] = ""
-        elif "model" not in data.keys():
-            data["model"] = ""    
 
-        if readjson:
-            lang = data["lang"] if data["lang"] is not "" else "eng"
-            model = data["model"]
-            text = data["text"]
-        
+    def predict(self, lang, model, text):      
         if model == "cogcomp":
             global count_ccg_id
             helper = my_predict.ProcessHelper()
@@ -99,6 +121,9 @@ class MyWebService(object):
                 return predictors["lorelei-1"].predict_instance(text)
 
 
+    def html(self):
+        pass
+
         
 
 predictors = {}
@@ -118,14 +143,15 @@ if __name__ == '__main__':
         predictor =  predict_instance.Predictor(path)
         predictors[group] = predictor
         print("finish loading " + group + "\n")
-
-
+    
     print ("")
     print ("Starting rest service...")
     config = {'server.socket_host': '0.0.0.0'}
     cherrypy.config.update(config)
     #cherrypy.config.update({'server.socket_port': 4004})
-    #cherrypy.config.update(
-    #    {'server.socket_host': 'macniece.seas.upenn.edu', 'server.socket_port': 4004})  #'cors.expose.on': True
-    cherrypy.config.update({'server.socket_port': 8099})
+    cherrypy.config.update(
+        {'server.socket_host': 'dickens.seas.upenn.edu', 'server.socket_port': 8099, })  #'cors.expose.on': True
+    #cherrypy.config.update({'server.socket_port': 8099})
     cherrypy.quickstart(MyWebService())
+    
+    
