@@ -158,7 +158,7 @@ def whitespace_tokenize(text):
   text = text.strip()
   if not text:
     return []
-  tokens = text.split()
+  tokens = text.split(" ")
   return tokens
 
 
@@ -197,10 +197,13 @@ class BasicTokenizer(object):
     """
     self.do_lower_case = do_lower_case
 
-  def tokenize(self, text):
+  def tokenize(self, text, ignore_clean=False):
     """Tokenizes a piece of text."""
     text = convert_to_unicode(text)
-    text = self._clean_text(text)
+    # after _clean_text(), tokens in fas/sin may change
+    if ignore_clean:
+      print("Ignore zero width joiner (ZWJ), zero width non-joiner (ZWN)")
+    text = self._clean_text(text, ignore_clean)
 
     # This was added on November 1st, 2018 for the multilingual and Chinese
     # models. This is also applied to the English models now, but it doesn't
@@ -209,16 +212,16 @@ class BasicTokenizer(object):
     # characters in the vocabulary because Wikipedia does have some Chinese
     # words in the English Wikipedia.).
     text = self._tokenize_chinese_chars(text)
-
     orig_tokens = whitespace_tokenize(text)
     split_tokens = []
+
     for token in orig_tokens:
       if self.do_lower_case:
         token = token.lower()
         token = self._run_strip_accents(token)
       split_tokens.extend(self._run_split_on_punc(token))
-
-    output_tokens = whitespace_tokenize(" ".join(split_tokens))
+    
+    output_tokens = whitespace_tokenize(" ".join(split_tokens))    
     return output_tokens
 
   def _run_strip_accents(self, text):
@@ -287,17 +290,22 @@ class BasicTokenizer(object):
 
     return False
 
-  def _clean_text(self, text):
+  def _clean_text(self, text, ignore_clean=False):
     """Performs invalid character removal and whitespace cleanup on text."""
     output = []
     for char in text:
       cp = ord(char)
       if cp == 0 or cp == 0xfffd or _is_control(char):
-        continue
+        if ignore_clean:
+          pass
+        else:        
+          continue
+          
       if _is_whitespace(char):
         output.append(" ")
       else:
         output.append(char)
+    
     return "".join(output)
 
 
@@ -382,6 +390,7 @@ def _is_control(char):
   # characters.
   if char == "\t" or char == "\n" or char == "\r":
     return False
+  
   cat = unicodedata.category(char)
   if cat in ("Cc", "Cf"):
     return True

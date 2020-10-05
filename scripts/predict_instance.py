@@ -32,12 +32,12 @@ class Predictor:
         self.model_path = model_path
         # can use tokenizer from lrlp if possible.
         self.tokenizer = BasicTokenizer(do_lower_case=False)
-
+        
         archive = load_archive(model_path)
         self.model = archive.model
         config = archive.config.duplicate()
         dataset_reader_params = config["dataset_reader"]
-
+        
         '''        
         if "polyglot" in model_path:
             print("========   Use polyglot dataset_reader  ========")
@@ -46,41 +46,43 @@ class Predictor:
             dataset_reader_params["type"] = "conll2003"
         '''
        
+        
         if "sentence_length_threshold" in dataset_reader_params.keys():
             del dataset_reader_params["sentence_length_threshold"] #ruohao: comment out this for cs
         self.dataset_reader = DatasetReader.from_params(dataset_reader_params)
+        
 
-    def predict_instance(self, original_text):
+    def predict_instance(self, original_text, ignore_clean=False):
         original_text = original_text.strip()
         #print("original_txt:\n", original_text)
-        text_tokens = self.tokenizer.tokenize(original_text)
+        text_tokens = self.tokenizer.tokenize(original_text, ignore_clean)
         #print("text_tokens:\n", text_tokens)
+        
         input_tokens = [Token(token) for token in text_tokens]
         instance = self.dataset_reader.text_to_instance(input_tokens)
         output = self.model.forward_on_instances([instance])[0]
         #print("output[\"tags\"]:\n", output["tags"])
         spans = span_utils.bioul_tags_to_spans(output["tags"])
         #print(spans)
-        return format_ner_output_to_json(original_text, text_tokens, output["tags"], spans)
-
+        #return format_ner_output_to_json(original_text, text_tokens, output["tags"], spans)
+        return format_text_annotation(original_text, text_tokens, spans)
+        
 
 def format_text_annotation(original_text, text_tokens, spans):
     assert len(original_text.strip()) == len(original_text)
     starts = []
     ends = []
     offset = 0
+    
     for token in text_tokens:
-        start_place = original_text.find(token, offset)
+        start_place = original_text.find(token, offset)        
         assert start_place != -1
+           
         starts.append(start_place)
         ends.append(start_place + len(token))
         assert original_text[starts[-1]: ends[-1]] == token
         offset = ends[-1]
-    return {
-        "corpusId": "",
-        "id": "someFakeId",
-        "text": original_text,
-        "tokens": text_tokens,
+    '''
         "tokenOffsets": [
             {
                 "form": token,
@@ -88,6 +90,12 @@ def format_text_annotation(original_text, text_tokens, spans):
                 "endCharOffset": end
             } for (token, start, end) in zip(text_tokens, starts, ends)
         ],
+    '''
+    return {
+        "corpusId": "",
+        "id": "someFakeId",
+        "text": original_text,
+        "tokens": text_tokens,
         "sentences": {
             "generator": "UserSpecified",
             "score": 1.0,

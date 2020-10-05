@@ -118,6 +118,8 @@ class MyWebService(object):
 
             else: 
                 print("Use LORELEI Polyglot model")
+                if lang in ["fas", "sin"]:
+                    return predictors["lorelei-1"].predict_instance(text, ignore_clean=True)
                 return predictors["lorelei-1"].predict_instance(text)
 
 
@@ -132,8 +134,8 @@ if __name__ == '__main__':
     # Define the list of preloaded bert models here
     preload = ["lorelei-1", "conll", "balto-slavic"]      
     # For cogcomp, load models in ner() 
-    #preload = ["conll"]
-    
+    #preload = ["lorelei-1"]
+   
     print ("")
     print ("Preloading Polyglot BERT models ...")
     for group in preload:
