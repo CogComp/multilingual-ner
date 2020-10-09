@@ -52,7 +52,7 @@ NOTE: To use the only default setup for Cogcomp English, set "lang" to "eng-defa
 
 
 ## Language codes
-We now support NER for 33 languages:
+We now support NER for 36 languages:
 <!-- mdformat off(no table) -->
 
 | Language   | Code       | Language   | Code       | Language   | Code       |
@@ -68,6 +68,7 @@ We now support NER for 33 languages:
 | Oromo | orm | Sinhala | sin | Tigrinya| tir |
 | Uyghur | uig  | Czech | cs |  Bulgarian | bg |
 |  Polish | pl | Dutch | ned | German | deu |
+| English | eng | French | fr | Italian | it |
 
 <!-- mdformat on -->
 
