@@ -2,27 +2,13 @@ import cherrypy
 import my_predict
 import predict_instance
 import os, shutil
-import requests
 
-def annotate_ner(input):
-    ner_input = {}
-    ner_input["lang"] = input["xel_lang"]
-    ner_input["model"] = input["xel_model"]
-    ner_input["text"] = input["xel_text"]
-    #print(ner_input["lang"])       
-    #print(ner_input["model"])
-    #print(ner_input["text"])
-    response = requests.post("http://dickens.seas.upenn.edu:4033/ner/", json = ner_input)
-    # print(type(response.json()))
-    # print(json.dumps(response.json()))
-    return response.json()
 
 class MyWebService(object):
 
     @cherrypy.expose
     def index(self):
-        # return {"what???"}
-        return open('public/index.php')
+        return {"what???"}
 
     @cherrypy.expose
     @cherrypy.tools.json_out()
@@ -65,6 +51,9 @@ class MyWebService(object):
                 return {"Warning" : "Missing fields: " + ", ".join(invalid)}
             else:
                 return self.predict(data["lang"], data["model"], data["text"])
+
+
+            
 
     @cherrypy.expose
     @cherrypy.tools.json_out()
@@ -137,43 +126,7 @@ class MyWebService(object):
     def html(self):
         pass
 
-    @cherrypy.expose
-    @cherrypy.tools.json_out()
-    @cherrypy.tools.json_in()
-    def xel(self):
-        input = cherrypy.request.json
-        data = {}
-        data["xel_lang"] = input["lang"]
-        data["xel_model"] = input["model"]
-        data["xel_text"] = input["text"]
-        #print(input["lang"])
-        #print(input["model"])
-        #print(input["text"])
-        ner_result = annotate_ner(data)
-        # ner_tokens = ner_result["text_tokens"].copy()
-        ner_tokens = ner_result["tokens"].copy()
-        # ner_spans = ner_result["spans"].copy()
-        ner_spans = []
-
-        for v in ner_result["views"]:
-            if v["viewName"] == "NER_CONLL":
-                # return {"html":type(v["viewData"][0]["constituents"]).__name__}
-                ner_spans = v["viewData"][0]["constituents"].copy()
-        # return {"html":type(ner_spans).__name__}
-        for span in ner_spans:
-            # return {"html":json.dumps(span)} # + "," + span["begin"]}
-            # return {"html":type(ner_spans).__name__ + "," + type(span).__name__ + "," + type(span[label"]).__name__ + "," + span["label"]}
-            # ner_tokens[span[1][0]] = "<b>["+span[0]+" "+ner_tokens[span[1][0]]
-            # ner_tokens[span[1][1]] = ner_tokens[span[1][1]] + "]</b>"
-            ner_tokens[span["start"]] = "<b>["+span["label"]+" "+ner_tokens[span["start"]]
-            ner_tokens[span["end"]-1] = ner_tokens[span["end"]-1] + "]</b>"
-
-        html_result = ""
-        for token in ner_tokens:
-            html_result = html_result + token + " "
-
-        ner_result["html"] = html_result
-        return ner_result
+        
 
 predictors = {}
 count_ccg_id = 0
@@ -194,33 +147,13 @@ if __name__ == '__main__':
         print("finish loading " + group + "\n")
     
     print ("")
-
-    conf = {
-        '/': {
-            'tools.sessions.on': True,
-            'tools.staticdir.root': os.path.abspath(os.getcwd())
-        },
-        '/static': {
-            'tools.staticdir.on': True,
-            'tools.staticdir.dir': './public'
-        },
-        '/css': {
-            'tools.staticdir.on': True,
-            'tools.staticdir.dir': "./public/css"
-        },
-        '/js': {
-            'tools.staticdir.on': True,
-            'tools.staticdir.dir': "./public/js"
-        },
-    }
-
     print ("Starting rest service...")
     config = {'server.socket_host': '0.0.0.0'}
     cherrypy.config.update(config)
     #cherrypy.config.update({'server.socket_port': 4004})
     cherrypy.config.update(
-        {'server.socket_host': 'dickens.seas.upenn.edu', 'server.socket_port': 4033, })  #'cors.expose.on': True
+        {'server.socket_host': 'dickens.seas.upenn.edu', 'server.socket_port': 8099, })  #'cors.expose.on': True
     #cherrypy.config.update({'server.socket_port': 8099})
-    # cherrypy.quickstart(MyWebService())
-    cherrypy.quickstart(MyWebService() , '/', conf)  
+    cherrypy.quickstart(MyWebService())
+    
     
