@@ -38,19 +38,11 @@ class Predictor:
         config = archive.config.duplicate()
         dataset_reader_params = config["dataset_reader"]
         
-        '''        
-        if "polyglot" in model_path:
-            print("========   Use polyglot dataset_reader  ========")
-        else:
-            print("========   Use conll2003 dataset_reader  ========")
-            dataset_reader_params["type"] = "conll2003"
-        '''
-       
-        
         if "sentence_length_threshold" in dataset_reader_params.keys():
             del dataset_reader_params["sentence_length_threshold"] #ruohao: comment out this for cs
         self.dataset_reader = DatasetReader.from_params(dataset_reader_params)
-        
+        self.model.eval()
+
 
     def predict_instance(self, original_text, ignore_clean=False):
         original_text = original_text.strip()
