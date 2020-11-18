@@ -1,0 +1,3 @@
+
+python ner.py
+
