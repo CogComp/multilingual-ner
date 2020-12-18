@@ -86,7 +86,7 @@ class MyWebService(object):
                 data = para
        
         result = self.read_request(data)
-        print(result)
+        #print(result)
         return result
             
 
@@ -130,8 +130,8 @@ class MyWebService(object):
             else: 
                 print("Use LORELEI Polyglot model")
                 if lang in ["fas", "sin"]:
-                    return predictors["lorelei-1"].predict_instance(text, ignore_clean=True)
-                return predictors["lorelei-1"].predict_instance(text)
+                    return predictors["lorelei-1"].predict_instance(text, lang, ignore_clean=True)
+                return predictors["lorelei-1"].predict_instance(text, lang)
 
 
     def html(self):
@@ -217,9 +217,8 @@ if __name__ == '__main__':
     print ("Starting rest service...")
     config = {'server.socket_host': '0.0.0.0'}
     cherrypy.config.update(config)
-    #cherrypy.config.update({'server.socket_port': 4004})
     cherrypy.config.update(
-        {'server.socket_host': 'dickens.seas.upenn.edu', 'server.socket_port': 4033, })  #'cors.expose.on': True
+        {'server.socket_host': 'dickens.seas.upenn.edu', 'server.socket_port': 8099, })  #'cors.expose.on': True
     #cherrypy.config.update({'server.socket_port': 8099})
     # cherrypy.quickstart(MyWebService())
     cherrypy.quickstart(MyWebService() , '/', conf)  

@@ -4,27 +4,20 @@ from allennlp.models.archival import load_archive
 from allennlp.common.util import import_submodules
 from bert_tokenization import BasicTokenizer
 import ccg
+from spacy.lang.xx import MultiLanguage
+#nlp = spacy.load("xx_ent_wiki_sm")
+nlp = MultiLanguage()
+sentencizer = nlp.create_pipe("sentencizer")
+nlp.add_pipe(sentencizer)
 
-'''
-DHEGAYSO+Sawiro: O
-Qaraxii O
-Muqdisho B-GPE
-Ruxay O
-, O
-wafdigii O
-ku O
-sugnaa O
-Iyo O
-qorshaha O
-Imaatinka O
-madaxwaynaha O
-Turkey B-GPE
-( O
-VOA B-ORG
-& O
-Reuters B-ORG
-) O
-'''
+from spacy.pipeline import Sentencizer
+sentencizer_other = Sentencizer()
+PUNCT = sentencizer_other.from_disk("./sentencizer.jsonl").punct_chars
+
+SPACYLANG=['cmn','ned','eng','deu','pl','spa','esp']
+OTHERLANG=['aka','amh','hau','som','swa',
+            'tgl','uzb','wol','yor','zul',
+            'kin','orm','sin','tir','uig']
 
 
 class Predictor:
@@ -44,7 +37,7 @@ class Predictor:
         self.model.eval()
 
 
-    def predict_instance(self, original_text, ignore_clean=False):
+    def predict_instance(self, original_text, lang = "eng", ignore_clean=False):
         original_text = original_text.strip()
         #print("original_txt:\n", original_text)
         text_tokens = self.tokenizer.tokenize(original_text, ignore_clean)
@@ -57,104 +50,111 @@ class Predictor:
         spans = span_utils.bioul_tags_to_spans(output["tags"])
         #print(spans)
         #return format_ner_output_to_json(original_text, text_tokens, output["tags"], spans)
-        return format_text_annotation(original_text, text_tokens, spans)
+        return self.format_text_annotation(original_text, text_tokens, spans, lang)
+
+
+    def format_text_annotation(self, original_text, text_tokens, spans, lang):
+        assert len(original_text.strip()) == len(original_text)
+        starts = []
+        ends = []
+        offset = 0
+        
+        for token in text_tokens:
+            start_place = original_text.find(token, offset)        
+            assert start_place != -1
+            
+            starts.append(start_place)
+            ends.append(start_place + len(token))
+            assert original_text[starts[-1]: ends[-1]] == token
+            offset = ends[-1]
+
+        if lang in SPACYLANG:
+            doc = nlp(original_text)
+            sents_list = list(doc.sents)
+            count_idx = 0
+            sentence_end_positions=[]
+            for s in sents_list:
+                text = s.text
+                count_idx += len(self.tokenizer.tokenize(text))
+                #count_idx += len(s.text.split())
+                sentence_end_positions.append(count_idx)
+        else:
+            sentence_end_positions = [i+1 for i,x in enumerate(text_tokens) if x in PUNCT] 
+
+        if (len(text_tokens)) not in sentence_end_positions:
+            sentence_end_positions.append(len(text_tokens))
         
 
-def format_text_annotation(original_text, text_tokens, spans):
-    assert len(original_text.strip()) == len(original_text)
-    starts = []
-    ends = []
-    offset = 0
-    
-    for token in text_tokens:
-        start_place = original_text.find(token, offset)        
-        assert start_place != -1
-           
-        starts.append(start_place)
-        ends.append(start_place + len(token))
-        assert original_text[starts[-1]: ends[-1]] == token
-        offset = ends[-1]
-    '''
-        "tokenOffsets": [
-            {
-                "form": token,
-                "startCharOffset": start,
-                "endCharOffset": end
-            } for (token, start, end) in zip(text_tokens, starts, ends)
-        ],
-    '''
-    return {
-        "corpusId": "",
-        "id": "someFakeId",
-        "text": original_text,
-        "tokens": text_tokens,
-        "sentences": {
-            "generator": "UserSpecified",
-            "score": 1.0,
-            "sentenceEndPositions": [
-                len(text_tokens)
+        return {
+            "corpusId": "",
+            "id": "someFakeId",
+            "text": original_text,
+            "tokens": text_tokens,
+            "sentences": {
+                "generator": "UserSpecified",
+                "score": 1.0,
+                "sentenceEndPositions": sentence_end_positions
+            },
+            "views": [
+                {
+                    "viewName": "NER_CONLL",
+                    "viewData": [
+                        {
+                            "viewType": "edu.illinois.cs.cogcomp.core.datastructures.textannotation.View",
+                            "viewName": "NER_CONLL",
+                            "generator": "Ltf2TextAnnotation",
+                            "score": 1.0,
+                            "constituents": [
+                                {
+                                    "label": tag,
+                                    "score": 1.0,
+                                    "start": start,
+                                    "end": end + 1
+                                } for (tag, (start, end)) in spans
+                            ]
+                        },
+                    ]
+                },
+                {
+                    "viewName": "SENTENCE",
+                    "viewData": [
+                        {
+                            "viewType": "edu.illinois.cs.cogcomp.core.datastructures.textannotation.SpanLabelView",
+                            "viewName": "SENTENCE",
+                            "generator": "UserSpecified",
+                            "score": 1.0,
+                            "constituents": [
+                                {
+                                    "label": "SENTENCE",
+                                    "score": 1.0,
+                                    "start": 0,
+                                    "end": len(text_tokens)
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "viewName": "TOKENS",
+                    "viewData": [
+                        {
+                            "viewType": "edu.illinois.cs.cogcomp.core.datastructures.textannotation.TokenLabelView",
+                            "viewName": "TOKENS",
+                            "generator": "UserSpecified",
+                            "score": 1.0,
+                            "constituents": [
+                                {
+                                    "label": "",
+                                    "score": 1.0,
+                                    "start": start,
+                                    "end": start + 1
+                                } for start in range(len(text_tokens))
+                            ]
+                        }
+                    ]
+                }
             ]
-        },
-        "views": [
-            {
-                "viewName": "NER_CONLL",
-                "viewData": [
-                    {
-                        "viewType": "edu.illinois.cs.cogcomp.core.datastructures.textannotation.View",
-                        "viewName": "NER_CONLL",
-                        "generator": "Ltf2TextAnnotation",
-                        "score": 1.0,
-                        "constituents": [
-                            {
-                                "label": tag,
-                                "score": 1.0,
-                                "start": start,
-                                "end": end + 1
-                            } for (tag, (start, end)) in spans
-                        ]
-                    },
-                ]
-            },
-            {
-                "viewName": "SENTENCE",
-                "viewData": [
-                    {
-                        "viewType": "edu.illinois.cs.cogcomp.core.datastructures.textannotation.SpanLabelView",
-                        "viewName": "SENTENCE",
-                        "generator": "UserSpecified",
-                        "score": 1.0,
-                        "constituents": [
-                            {
-                                "label": "SENTENCE",
-                                "score": 1.0,
-                                "start": 0,
-                                "end": len(text_tokens)
-                            }
-                        ]
-                    }
-                ]
-            },
-            {
-                "viewName": "TOKENS",
-                "viewData": [
-                    {
-                        "viewType": "edu.illinois.cs.cogcomp.core.datastructures.textannotation.TokenLabelView",
-                        "viewName": "TOKENS",
-                        "generator": "UserSpecified",
-                        "score": 1.0,
-                        "constituents": [
-                            {
-                                "label": "",
-                                "score": 1.0,
-                                "start": start,
-                                "end": start + 1
-                            } for start in range(len(text_tokens))
-                        ]
-                    }
-                ]
-            }
-        ]
-    }
+        }
 
 
 def format_ner_output_to_json(original_text, text_tokens, ner_tags, spans):
@@ -180,6 +180,7 @@ if __name__ == '__main__':
     print(predict_single(text))
     # if somehow can keep a python instance running, then:
     # load the predictor first, as it takes time
-    predictor = Predictor("/scratch/hegler/lorelei-models/bert/som/exp1/model.tar.gz")
-    for query in range(5):
-        print(predict_with_initialized_predictor(predictor, text))
+    #predictor = Predictor("/scratch/hegler/lorelei-models/bert/som/exp1/model.tar.gz")
+    #for query in range(5):
+    #    print(predict_with_initialized_predictor(predictor, text))
+    
