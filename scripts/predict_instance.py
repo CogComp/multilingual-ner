@@ -76,7 +76,6 @@ class Predictor:
             for s in sents_list:
                 text = s.text
                 count_idx += len(self.tokenizer.tokenize(text))
-                #count_idx += len(s.text.split())
                 sentence_end_positions.append(count_idx)
         else:
             sentence_end_positions = [i+1 for i,x in enumerate(text_tokens) if x in PUNCT] 
@@ -178,9 +177,5 @@ def predict_with_initialized_predictor(predictor, text):
 if __name__ == '__main__':
     text = "DHEGAYSO+Sawiro: Qaraxii Muqdisho Ruxay , wafdigii ku sugnaa Iyo qorshaha Imaatinka madaxwaynaha Turkey ( VOA & Reuters )"
     print(predict_single(text))
-    # if somehow can keep a python instance running, then:
-    # load the predictor first, as it takes time
-    #predictor = Predictor("/scratch/hegler/lorelei-models/bert/som/exp1/model.tar.gz")
-    #for query in range(5):
-    #    print(predict_with_initialized_predictor(predictor, text))
+
     
