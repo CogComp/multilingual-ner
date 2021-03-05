@@ -335,8 +335,9 @@ function runXEL() {
 		"model": "bert",
 		"text" : fText
 	};
-	url="http://dickens.seas.upenn.edu:4033/xel";
-	//console.log("XEL input: " + JSON.stringify(data)); 
+	// url="https://cogcomp.seas.upenn.edu/dc4033/xel";
+	url = "./xel";
+	// console.log("XEL input: " + JSON.stringify(data)); 
 	postData(url, data, outputXEL);
 }
 

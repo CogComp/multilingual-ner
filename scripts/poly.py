@@ -3,6 +3,12 @@ import my_predict
 import predict_instance
 import os, shutil
 import requests
+import sys
+
+serviceURL = sys.argv[1]
+servicePort = int(sys.argv[2])
+print("serviceURL",serviceURL)
+print("servicePort",servicePort)
 
 def annotate_ner(input):
     ner_input = {}
@@ -218,7 +224,8 @@ if __name__ == '__main__':
     config = {'server.socket_host': '0.0.0.0'}
     cherrypy.config.update(config)
     cherrypy.config.update(
-        {'server.socket_host': 'dickens.seas.upenn.edu', 'server.socket_port': 8099, })  #'cors.expose.on': True
+        # {'server.socket_host': 'dickens.seas.upenn.edu', 'server.socket_port': 4033, })  #'cors.expose.on': True
+        {'server.socket_host': serviceURL, 'server.socket_port': servicePort, })  #'cors.expose.on': True
     #cherrypy.config.update({'server.socket_port': 8099})
     # cherrypy.quickstart(MyWebService())
     cherrypy.quickstart(MyWebService() , '/', conf)  
