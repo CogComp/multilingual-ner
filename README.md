@@ -15,9 +15,9 @@ Multilingual NER and XEL demo
 
 Please copy models from the above paths to the demo path:
 ```
-./m_odels/monolingual-bert
-./m_odels/polyglot-bert
-./m_odels/cogcomp
+./models/monolingual-bert
+./models/polyglot-bert
+./models/cogcomp
 ```
 
 
