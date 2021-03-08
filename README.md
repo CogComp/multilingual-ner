@@ -9,9 +9,9 @@ Multilingual NER and XEL demo
 
 
 ## Resources
-1. [Monolingual BERT models](https://cogcomp.seas.upenn.edu/models/multilingual-ner/monolingual-bert.tgz)
-2. [Polyglot BERT models](https://cogcomp.seas.upenn.edu/models/multilingual-ner/polyglot-bert.tgz)
-3. [CogComp models](https://cogcomp.seas.upenn.edu/models/multilingual-ner/cogcomp.tgz)
+1. [Monolingual BERT models](https://cogcomp.seas.upenn.edu/models/multilingual-ner/monolingual-bert.tgz) (~9.4GB)
+2. [Polyglot BERT models](https://cogcomp.seas.upenn.edu/models/multilingual-ner/polyglot-bert.tgz) (~1.9GB)
+3. [CogComp models](https://cogcomp.seas.upenn.edu/models/multilingual-ner/cogcomp.tgz) (~1.4GB)
 
 Please copy models from the above paths to the demo path:
 ```
