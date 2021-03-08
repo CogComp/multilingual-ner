@@ -11,7 +11,7 @@ Multilingual NER and XEL demo
 ## Resources
 1. All the monolingual BERT models are stored in: /shared/ruohaog/lorelei-models/bert
 2. All the polyglot (multilingual) BERT models are stored in: /shared/ruohaog/demo/polyglot-models
-3. [CogComp models](http://cogcomp.org/models/multilingual-ner/cogcomp.tgz)
+3. [CogComp models](https://cogcomp.seas.upenn.edu/models/multilingual-ner/cogcomp.tgz)
 
 Please copy models from the above paths to the demo path:
 ```
