@@ -9,10 +9,9 @@ class ProcessHelper:
     def base_tokenize(self, original_text):
         self.original_text = original_text
         original_text = original_text.strip()
-        #print("original_txt:\n", original_text)
         text_tokens = self.tokenizer.tokenize(original_text)
-        #print("text_tokens:\n", text_tokens)
         self.text_tokens = text_tokens
+        self.original_text = original_text
         return text_tokens
 
 
