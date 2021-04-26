@@ -83,3 +83,42 @@ LORELEI Tags: PER, LOC, ORG, GPE, TTL (only for "hau")
 
 BSNLP2019 Tags: PER, LOC, ORG, PRO, EVT
 
+## Statistics
+<!-- mdformat off(no table) -->
+| Model  | Training time (minutes)  | Evaluation time (seconds)  |
+|----------  | ---------- | ---------- |
+| aka  | 57 | 40 |
+| amh  | 36 | 41 |
+| ara  | 52 | 41 |
+| ben  | 83 | 48 |
+| cmn  | 74 | 40 |
+| fas  | 43 | 28 |
+| hau  | 57 | 43 |
+| hin  | 56 | 42 |
+| hun  | 45 | 40 |
+| ind  | 56 | 40 |
+| rus  | 53 | 41 |
+| som  | 34 | 27 |
+| spa  | 59 | 20 |
+| swa  | 66 | 26 |
+| tam  | 120 | 32 |
+| tgl  | 71 | 41 |
+| tha  | 175 | 39 |
+| tur  | 72 | 28 |
+| uzb  | 113 | 29 |
+| vie  | 53 | 28 |
+| wol  | 84 | 25 |
+| yor  | 53 | 24 |
+| zul  | 84 | 43 |
+| kin  | 31 | 47 |
+| orm  | 49 | 41 |
+| sin  | 33 | 45 |
+| tir  | 35 | 42 |
+| uig  | 65 | 51 |
+| * ru, cs, bg, pl  | 511 | -- |
+| nl  | 159 | 42 |
+| de  | 120 | 36 |
+| es  | 124 | 29 |
+<!-- mdformat on -->
+
+NOTE: [Multisource Transfer](https://www.aclweb.org/anthology/W19-3710/) is used to improve the NER performance on the very underresourced Balto-slavic languages.  
