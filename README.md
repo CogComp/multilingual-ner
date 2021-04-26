@@ -85,7 +85,7 @@ BSNLP2019 Tags: PER, LOC, ORG, PRO, EVT
 
 ## Statistics
 <!-- mdformat off(no table) -->
-| Model  | Training time (minutes)  | Evaluation time (seconds)  |
+| Monolingual BERT Models  | Training time (minutes)  | Evaluation time (seconds)  |
 |----------  | ---------- | ---------- |
 | aka  | 57 | 40 |
 | amh  | 36 | 41 |
