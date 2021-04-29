@@ -125,7 +125,15 @@ class MyWebService(object):
             return result       
 
         else:
-            if lang in ["deu", "ned", "eng", "esp"]:
+            if lang in "kairos_eng":
+                print("use Kairos English model")
+                return predictors["kairos_ner"].predict_instance(text)
+
+            elif lang in "onto_eng":
+                print("use Ontonotes v5 English model")
+                return predictors["onto_ner"].predict_instance(text)
+
+            elif lang in ["deu", "ned", "eng", "esp"]:
                 print("Use CoNLL Polyglot model")
                 return predictors["conll"].predict_instance(text)
 
@@ -185,9 +193,10 @@ predictors = {}
 count_ccg_id = 0
 if __name__ == '__main__':
     # Define the list of preloaded bert models here
-    preload = ["lorelei-1", "conll", "balto-slavic"]      
-    # For cogcomp, load models in ner() 
-    #preload = ["lorelei-1"]
+    preload = ["lorelei-1", "conll", "balto-slavic", "kairos_ner", "onto_ner"]    
+    # If you want to use only English models, uncomment below
+    # preload = ["kairos_ner", "onto_ner"]    
+    # load Cogcomp models in ner() 
    
     print ("")
     print ("Preloading Polyglot BERT models ...")
