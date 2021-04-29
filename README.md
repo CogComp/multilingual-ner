@@ -84,8 +84,11 @@ LORELEI Tags: PER, LOC, ORG, GPE, TTL (only for "hau")
 BSNLP2019 Tags: PER, LOC, ORG, PRO, EVT
 
 ## Statistics
+Each CogComp model takes no more than 7 minutes to train (given pretrained brown clusters) and evaluate within 15 seconds.
+
+For each monolingual BERT model:
 <!-- mdformat off(no table) -->
-| Monolingual BERT Models  | Training time (minutes)  | Evaluation time (seconds)  |
+| BERT Models  | Training time (minutes)  | Evaluation time (seconds)  |
 |----------  | ---------- | ---------- |
 | aka  | 57 | 40 |
 | amh  | 36 | 41 |
