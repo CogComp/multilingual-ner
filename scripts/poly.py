@@ -97,7 +97,7 @@ class MyWebService(object):
             
 
     def predict(self, lang, model, text):      
-        if model == "cogcomp":
+        if "cogcomp" in model:
             global count_ccg_id
             helper = my_predict.ProcessHelper()
             print("loading and running CCG ...\n")
@@ -114,7 +114,15 @@ class MyWebService(object):
             os.makedirs(new_outdir)
 
             helper.getInput2CCG(text, new_indir+"/tmp_in.txt")
-            os.system("sh use_annotate.sh " + lang + " " + str(count_ccg_id))
+
+            if lang == "eng":
+                if "onto" in model:
+                    os.system("sh use_annotate.sh onto_eng " + str(count_ccg_id))
+                else:
+                    os.system("sh use_annotate.sh eng " + str(count_ccg_id))
+            else:
+                os.system("sh use_annotate.sh " + lang + " " + str(count_ccg_id))
+
             print("done ...\n") 
             result = helper.getOutputFromCCG(new_outdir+"/0.txt")  
             
@@ -125,15 +133,11 @@ class MyWebService(object):
             return result       
 
         else:
-            if lang in "kairos_eng":
-                print("use Kairos English model")
-                return predictors["kairos_ner"].predict_instance(text)
+            if lang == "eng":
+                # model: kairos_ner, onto_ner, conll
+                return predictors[model].predict_instance(text)
 
-            elif lang in "onto_eng":
-                print("use Ontonotes v5 English model")
-                return predictors["onto_ner"].predict_instance(text)
-
-            elif lang in ["deu", "ned", "eng", "esp"]:
+            elif lang in ["deu", "ned", "esp"]:
                 print("Use CoNLL Polyglot model")
                 return predictors["conll"].predict_instance(text)
 
@@ -144,8 +148,8 @@ class MyWebService(object):
             else: 
                 print("Use LORELEI Polyglot model")
                 if lang in ["fas", "sin"]:
-                    return predictors["lorelei-1"].predict_instance(text, lang, ignore_clean=True)
-                return predictors["lorelei-1"].predict_instance(text, lang)
+                    return predictors["lorelei-1"].predict_instance(text, ignore_clean=True)
+                return predictors["lorelei-1"].predict_instance(text)
 
 
     def html(self):
