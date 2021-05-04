@@ -1,9 +1,10 @@
-COGCOMP=/shared/ruohaog/ccg/cogcomp-nlp/ner/
+#COGCOMP=/shared/ruohaog/ccg/cogcomp-nlp/ner/
+COGCOMP=/shared/ccgadmin/demos/XLANG/ner/cogcomp-nlp/ner/
 pushd $COGCOMP
 lang=$1
 id=$2
-tmp_dir=/shared/ruohaog/demo/multilingual-demo/scripts/tmp
-
+#tmp_dir=/shared/ruohaog/demo/multilingual-demo/scripts/tmp
+tmp_dir=/shared/ccgadmin/demos/XLANG/ner/multilingual-ner/scripts/tmp
 
 if [ "$lang" != "eng-default" ]
 then
