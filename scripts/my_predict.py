@@ -59,11 +59,13 @@ def format_text_annotation(original_text, text_tokens, spans):
 
     for token in text_tokens:
         start_place = original_text.find(token, offset)
-        assert start_place != -1
+        if start_place == -1:
+            start_place = offset + 1
         starts.append(start_place)
         ends.append(start_place + len(token))
-        assert original_text[starts[-1]: ends[-1]] == token
+        #assert original_text[starts[-1]: ends[-1]] == token
         offset = ends[-1]
+
     return {
         "corpusId": "",
         "id": "someFakeId",
@@ -161,8 +163,4 @@ if __name__ == '__main__':
     helper.getOutputFromCCG()
     lang = "som"
     text = "Bisha soo socota 16 keeda ayaa waxaa buuxsamaya Sannad guuradii koowaad ee ka soo wareegtey markii Ciidamada Kenya ay soo galeen qaybo ka mid ah Gobolka Jubada hoose iyadoo Ciidamada weli aysan gaarin hadafkoodii ahaa qabsashada Magaalada Kismaayo ka dib markii ay la kulmeen iska cabin aad u weyn."
-    #helper.getInput2CCG(text)
-    #print("loading CCG ........\n")
-    #os.system("sh use_annotate.sh "+lang)
-    #print("done ...........\n")
     
