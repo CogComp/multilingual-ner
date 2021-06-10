@@ -32,6 +32,16 @@ class MyWebService(object):
 
     @cherrypy.expose
     @cherrypy.tools.json_out()
+    @cherrypy.tools.json_in()
+    def info(self, **params):
+        return {"status":"online"}
+
+    @cherrypy.expose
+    def halt(self, **params):
+        cherrypy.engine.exit()
+
+    @cherrypy.expose
+    @cherrypy.tools.json_out()
     def status(self):
         lang_list = ["Akan (Twi)", "Amharic", "Arabic", "Bengali", "Mandarin", "Farsi", 
                 "Hausa", "Hindi", "Hungarian", "Indonesian", "Russian", "Somali", "Spanish", 
