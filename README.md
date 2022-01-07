@@ -1,5 +1,5 @@
-# multilingual-demo
-Multilingual NER and XEL demo
+# Multilingual NER and XEL Demo
+<!--- Multilingual NER and XEL demo --->
 ## Requirements
 1. Install cherrypy;
 2. Install allennlp 0.8.0 (for monolingual NER models) or allennlp 0.8.5 (for polyglot NER models);
